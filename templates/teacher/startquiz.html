@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block home %}active{% endblock %}
+
+{% block title %}
+Quiz- {{title}} | QComp.
+{% endblock %}
+
+
+{% block js %}
+<script src="{% static 'js/main.js' %}" type="text/javascript"></script>
+{% endblock %}
+
+
+{% block body %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'homepage' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'homepage' %}">Quiz</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{title}}</li>
+    </ol>
+</nav>
+<h3 class="page-header mt-5">
+    {{title}}
+</h3>
+<input type="hidden" id="jsondata" value="{{ques}}">
+<!-- Button trigger modal -->
+<p>Start answering questions.</p>
+
+<!--<h1 id="question_number">-1</h1>-->
+
+<div class="p-1 bg-light text-black rounded quizbox">
+    <input value="{{url}}" id="url_for_json" hidden>
+    <div id="question_block" class=" mb-5" style="padding-left:5%">
+        <span style="font-weight:800; float:left">Q<span id="question_number">0</span></span><span id="question_number"
+                                                                                                   style="font-weight:800; float:left"></span>
+        <p id="quizq" class="pt-4" style="padding-left:2%"></p>
+        <div id="extra_outer_container"></div>
+        <div id="outer_question_container"></div>
+
+        <p id="correct_ans"></p>
+        <p id="show_c"></p>
+        <div style="float:right" class="btn-group" role="group" aria-label="Basic outlined example">
+            <button onclick="check_answer(-1)" id="check_ans" type="button" class="btn btn-outline-primary">Check
+                answer
+            </button>
+            <button id="next_question" onclick="nextquestion()" disabled type="button" class="btn btn-outline-primary">
+                Next
+            </button>
+        </div>
+        <span id="correct">-1</span>
+
+    </div>
+    <div style="visibility:hidden; background-color:lightgrey; padding:4%" id="submit_block">
+        <h1>Thankyou for taking this quiz!</h1>
+        <h4>Your will be recorded once you submit the test from below link:</h4>
+
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item"><strong>Correct</strong></li>
+            <li class="list-group-item"><span id="show_correct"></span></li>
+        </ul>
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item"><strong>Incorrect</strong></li>
+            <li class="list-group-item"><span id="incorrect"></span></li>
+        </ul>
+
+        <form action="{% url 'submitquiz' %}" method="get">
+
+            <input type="hidden" name="title" value="{{title}}">
+            <input type="hidden" name="correct_form" id="correct_a" value="">
+            <input type="hidden" name="incorrect_form" id="incorrect_a" value="">
+            <input type="submit" value="Submit" class="btn btn-primary">
+        </form>
+    </div>
+</div>
+
+{% endblock %}

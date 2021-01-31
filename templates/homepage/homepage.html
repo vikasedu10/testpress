@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block home %}active{% endblock %}
+
+{% block title %}
+Home | QComp.
+{% endblock %}
+
+{% block body %}
+<h3 class="page-header">
+    Welcome to QComp. Enroll for quiz and prepare for your exams today!
+</h3>
+<div class="row">
+    {% for quiz in quiz %}
+    <div class="col-sm-6 d-flex my-3 align-items-stretch">
+        <div class="card">
+            {% if quiz.thumbnail %}
+            <img src="{{quiz.thumbnail.url}}" style="max-height:170px; object-fit:cover" class="card-img-top" alt="{{quiz.title}}">
+            {% else %}
+            <img src="{% static 'images/default-image.png' %}" style="max-height:170px; object-fit:cover" class="card-img-top" alt="{{quiz.title}}">
+            {% endif %}
+            <div class="card-body">
+
+
+                <div style="font-size:23px; font-weight:700" class="card-title">{{quiz.title}}</div>
+                <p style="font-size:18px" class="card-text">{{quiz.description|truncatechars:'70'}}</p>
+            </div>
+            <div class="p-3 pb-2">
+                {% if user.is_authenticated %}
+                <a href="{% url 'quiz' quiz.id %}" class="btn btn-primary">Start Quiz</a>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+                {% endif %}
+            </div>
+            {% if quiz.thumbnail %}
+            <img src="{{quiz.thumbnail.url}}" style="max-height:5px; object-fit:cover" class="card-img-top" alt="{{quiz.title}}">
+            {% else %}
+            <img src="{% static 'images/default-image.png' %}" style="max-height:10px; object-fit:cover" class="card-img-top" alt="{{quiz.title}}">
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

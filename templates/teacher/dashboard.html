@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block dashboard %}active{% endblock %}
+
+{% block title %}
+Teacher's Dashboard | QComp.
+{% endblock %}
+
+
+{% block js %}
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock %}
+
+
+{% block body %}
+<h3 class="page-header mt-5">
+    Welcome to QComp. Dashboard. Here you can enroll students, create a Quiz and check students status.
+</h3>
+<!-- Button trigger modal -->
+<p>Create a new quiz for your students instantly.</p>
+
+<button type="button" class="mt-1 btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    New quiz
+</button>
+
+<!-- Modal for new QUIZ -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content p-1">
+            <form method="post" enctype="multipart/form-data" action="{% url 'dashboard' %}"
+                  class="row g-3 needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Add a new quiz for your students...</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Upload Quiz Thumbanil here</label>
+                        <input class="form-control" type="file" name="thumbnail" id="thumbnail">
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="validationCustom01" class="form-label">Quiz title</label>
+                        <input type="text" class="form-control" placeholder="Enter Quiz title" name="title" required>
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <label for="validationCustom01" class="form-label">Enter Open Trivia Database Question url
+                            here</label>
+                        <input type="text" class="form-control"
+                               placeholder="Enter url generated from OpenTrivia Database site" name="url" required>
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <label for="validationCustom01" class="form-label">Enter Quiz description</label>
+                        <textarea class="form-control" placeholder="Enter description of Quiz" name="description"
+                                  required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add now</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if result|length > 0 %}
+<div class="container mt-4">
+    <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Students Quiz record</h5>
+            </div>
+            <p class="mb-1">This section contains records of all the students who have taken the quiz.</p>
+            <small>Showing all results</small>
+        </a>
+
+        {% for result in result %}
+        <a href="#" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{result.title}}</h5>
+                <small class="text-muted">{{result.timestamp|date:'N j o'}}</small>
+            </div>
+            <p class="mb-1">
+                <p class="mb-1"><strong>Correct: </strong>{{result.correct}}</p>
+                <p class="mb-1"><strong>In-correct: </strong>{{result.incorrect}}</p>
+            </p>
+            <small class="text-muted">Taken by: {{result.user}}</small>
+        </a>
+        {% endfor %}
+
+    </div>
+</div>
+{% else %}
+<p class="pt-3">No student have taken the quiz yet.</p>
+{% endif %}
+
+{% endblock %}
